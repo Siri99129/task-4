@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Web page</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    h1 { background: #333; color: #fff; padding: 10px; }
+    section { border: 1px solid #ccc; padding: 15px; margin: 20px 0; }
+    nav a { margin: 0 10px; text-decoration: none; color: blue; }
+    nav { margin-bottom: 20px; }
+    input, button, select { padding: 6px; margin: 5px 0; }
+    ul { list-style: none; padding: 0; }
+    li { margin: 6px 0; }
+    .product { border: 1px solid #ccc; padding: 8px; width: 150px; margin: 8px; }
+    #products { display: flex; flex-wrap: wrap; gap: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Web page</h1>
+  <nav>
+    <a href="#portfolio">Portfolio</a>
+    <a href="#todo">To-Do List</a>
+    <a href="#products">Products</a>
+  </nav>
+  <!-- 📌 Personal Portfolio Section -->
+  <section id="portfolio">
+    <h2>📖 Personal Portfolio</h2>
+    <p>Hello! I'm a web developer passionate about creating interactive websites.</p>
+    <h3>Skills:</h3>
+    <ul>
+      <li>HTML</li>
+      <li>CSS</li>
+      <li>JavaScript</li>
+      <li>python</li>
+    </ul>
+    <h3>Projects:</h3>
+    <ul>
+      <li>To-Do List App</li>
+      <li>Product Page Filter</li>
+    </ul>
+  </section>
+  <!-- 📌 To-Do List Section -->
+  <section id="todo">
+    <h2>📝 To-Do List (with Local Storage)</h2>
+    <input type="text" id="task" placeholder="Add a new task">
+    <button onclick="addTask()">Add</button>
+    <ul id="taskList"></ul>
+  </section>
+  <!-- 📌 Product Listing Section -->
+  <section id="products">
+    <h2>🛍️ Product Listing with Sorting</h2>
+    <label>Sort by:
+      <select id="sort" onchange="sortProducts()">
+        <option value="price">Price</option>
+        <option value="rating">Rating</option>
+      </select>
+    </label>
+    <div id="productContainer"></div>
+  </section>
+  <!-- 📌 JavaScript Code -->
+  <script>
+    // To-Do List Functions
+    function addTask() {
+      let task = document.getElementById("task").value;
+      if (task === "") return;
+      let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+      tasks.push(task);
+      localStorage.setItem("tasks", JSON.stringify(tasks));
+      displayTasks();
+      document.getElementById("task").value = "";
+    }
+    function displayTasks() {
+      let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+      let list = document.getElementById("taskList");
+      list.innerHTML = "";
+      tasks.forEach((task, index) => {
+        list.innerHTML += `<li>${task} <button onclick="removeTask(${index})">❌</button></li>`;
+      });
+    }
+    function removeTask(index) {
+      let tasks = JSON.parse(localStorage.getItem("tasks"));
+      tasks.splice(index, 1);
+      localStorage.setItem("tasks", JSON.stringify(tasks));
+      displayTasks();
+    }
+    displayTasks();
+    // Product Listing Functions
+    let products = [
+      { name: "Shoes", price: 1200, rating: 4.5 },
+      { name: "Watch", price: 2500, rating: 4.8 },
+      { name: "Bag", price: 800, rating: 4.0 }
+    ];
+    function displayProducts() {
+      let container = document.getElementById("productContainer");
+      container.innerHTML = "";
+      products.forEach(p => {
+        container.innerHTML += `<div class="product">
+          <strong>${p.name}</strong>
+          <p>₹${p.price}</p>
+          <p>⭐ ${p.rating}</p>
+        </div>`;
+      });
+    }
+    function sortProducts() {
+      let sortBy = document.getElementById("sort").value;
+      products.sort((a, b) => a[sortBy] - b[sortBy]);
+      displayProducts();
+    }
+    displayProducts();
+  </script>
+</body>
+</html>
